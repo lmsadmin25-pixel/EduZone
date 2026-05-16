@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const razorpay = require('../config/razorpay');
+const getRazorpay = require('../config/razorpay');
 const Payment = require('../models/Payment');
 const Course = require('../models/Course');
 const Enrollment = require('../models/Enrollment');
@@ -26,7 +26,7 @@ const createOrder = async (req, res, next) => {
       receipt: `receipt_${Date.now()}`
     };
 
-    const order = await razorpay.orders.create(options);
+    const order = await getRazorpay().orders.create(options);
 
     // Save payment record with pending status
     await Payment.create({
