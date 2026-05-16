@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/* ===== EduZone Custom Theme ===== */
+
+@theme {
+  /* Primary - Navy Blue */
+  --color-primary-50: #E8EDF4;
+  --color-primary-100: #C5D1E8;
+  --color-primary-200: #9DB2D8;
+  --color-primary-300: #7593C8;
+  --color-primary-400: #4A6FA5;
+  --color-primary-500: #1E3A5F;
+  --color-primary-600: #1A3354;
+  --color-primary-700: #152B48;
+  --color-primary-800: #11233C;
+  --color-primary-900: #0C1A2E;
+
+  /* Accent - Golden Yellow */
+  --color-accent-50: #FEF7E0;
+  --color-accent-100: #FDEDB3;
+  --color-accent-200: #FBE280;
+  --color-accent-300: #FAD74D;
+  --color-accent-400: #F7C526;
+  --color-accent-500: #F4B400;
+  --color-accent-600: #D9A000;
+  --color-accent-700: #B88600;
+  --color-accent-800: #966D00;
+  --color-accent-900: #745400;
+
+  /* Surface - Light grays */
+  --color-surface-50: #FAFAFA;
+  --color-surface-100: #F5F5F5;
+  --color-surface-200: #EEEEEE;
+  --color-surface-300: #E0E0E0;
+  --color-surface-400: #BDBDBD;
+
+  /* Feedback */
+  --color-success: #22C55E;
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
+
+  /* Font */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ===== Base Styles ===== */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-surface-50);
+  color: #1f2937;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-100);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-300);
+  border-radius: 3px;
+}
+
+/* ===== Custom Utilities ===== */
+.section-padding {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .section-padding {
+    padding-left: 6rem;
+    padding-right: 6rem;
+  }
+}
