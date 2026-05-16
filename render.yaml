@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: eduzone
+    runtime: node
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # Set all secrets below in Render dashboard (not here)
+      # - MONGO_URI
+      # - JWT_SECRET
+      # - GOOGLE_CLIENT_ID
+      # - GOOGLE_CLIENT_SECRET
+      # - GOOGLE_CALLBACK_URL
+      # - CLOUDINARY_CLOUD_NAME
+      # - CLOUDINARY_API_KEY
+      # - CLOUDINARY_API_SECRET
+      # - RAZORPAY_KEY_ID
+      # - RAZORPAY_KEY_SECRET
+      # - SMTP_HOST
+      # - SMTP_PORT
+      # - SMTP_USER
+      # - SMTP_PASS
+      # - GEMINI_API_KEY
