@@ -50,8 +50,8 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <ul className="space-y-2 text-sm text-primary-200">
               <li>📧 support@eduzone.com</li>
-              <li>📞 +91 98765 43210</li>
-              <li>📍 New Delhi, India</li>
+              <li>📞 +91 7653061135</li>
+              <li>📍 Bhubaneswar, India</li>
             </ul>
           </div>
         </div>
