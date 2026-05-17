@@ -180,13 +180,31 @@ const forgotPassword = async (req, res, next) => {
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
     const html = passwordResetTemplate(user.name, resetUrl);
 
-    await sendEmail({
-      to: user.email,
-      subject: 'EduZone - Password Reset Request',
-      html
-    });
+    // Try sending email — but don't fail the API if SMTP isn't configured
+    try {
+      const emailResult = await sendEmail({
+        to: user.email,
+        subject: 'EduZone - Password Reset Request',
+        html
+      });
 
-    res.json({ message: 'Password reset email sent successfully' });
+      if (emailResult?.skipped) {
+        // SMTP not configured — return reset link directly for dev/demo purposes
+        return res.json({
+          message: 'Email service not configured. Use the reset link below directly.',
+          resetUrl,
+          note: 'Configure SMTP_HOST, SMTP_USER, SMTP_PASS in Render environment variables to enable email delivery.'
+        });
+      }
+    } catch (emailErr) {
+      console.error('Failed to send reset email:', emailErr.message);
+      return res.status(500).json({
+        message: 'Password reset token generated but email delivery failed. Contact support.',
+        error: emailErr.message
+      });
+    }
+
+    res.json({ message: 'Password reset email sent successfully. Check your inbox.' });
   } catch (error) {
     next(error);
   }
