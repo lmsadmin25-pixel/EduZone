@@ -28,8 +28,8 @@ const ContactPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
           {[
             { icon: <FaEnvelope className="text-xl text-primary-500" />, title: 'Email', value: 'support@eduzone.com' },
-            { icon: <FaPhone className="text-xl text-primary-500" />, title: 'Phone', value: '+91 98765 43210' },
-            { icon: <FaMapMarkerAlt className="text-xl text-primary-500" />, title: 'Address', value: 'New Delhi, India' },
+            { icon: <FaPhone className="text-xl text-primary-500" />, title: 'Phone', value: '+91 7653061135' },
+            { icon: <FaMapMarkerAlt className="text-xl text-primary-500" />, title: 'Address', value: 'Bhubaneswar, India' },
           ].map((c, i) => (
             <div key={i} className="bg-white border border-surface-300 rounded-lg p-5 text-center">
               <div className="flex justify-center mb-2">{c.icon}</div>
