@@ -10,6 +10,8 @@ const {
   getAllWithdrawals, getWithdrawalStats,
   approveWithdrawal, rejectWithdrawal
 } = require('../controllers/withdrawalAdminController');
+const { adminGetAllAssignments } = require('../controllers/assignmentController');
+const { adminGetAllTests } = require('../controllers/testController');
 
 router.use(protect, roleAuth('admin'));
 
@@ -20,6 +22,10 @@ router.get('/enrollments', getAllEnrollments);
 router.put('/educators/:id/approve', approveEducator);
 router.put('/users/:id/block', toggleBlockUser);
 router.get('/courses', getAllCourses);
+
+// Assignments & Quizzes monitoring
+router.get('/assignments', adminGetAllAssignments);
+router.get('/quizzes', adminGetAllTests);
 
 // Withdrawal management
 router.get('/withdrawals', getAllWithdrawals);
