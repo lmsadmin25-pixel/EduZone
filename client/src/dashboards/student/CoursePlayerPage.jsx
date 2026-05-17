@@ -31,8 +31,19 @@ const CoursePlayerPage = () => {
     if (!enrollment) return;
     try {
       const res = await api.put(`/enrollments/${enrollment._id}/progress`, { lessonId });
-      setEnrollment(res.data.enrollment);
+      const updatedEnrollment = res.data.enrollment;
+      setEnrollment(updatedEnrollment);
       toast.success('Lesson marked as complete!');
+
+      // Auto-generate certificate when course is 100% complete
+      if (updatedEnrollment.progress === 100) {
+        try {
+          await api.post('/certificates/generate', { courseId });
+          toast.success('🎉 Congratulations! Certificate generated — check My Certificates!', { autoClose: 6000 });
+        } catch {
+          // Already exists or other error — ignore silently
+        }
+      }
     } catch { toast.error('Failed to update progress'); }
   };
 
