@@ -6,6 +6,10 @@ const {
   getDashboardStats, getAllStudents, getAllEducators,
   approveEducator, toggleBlockUser, getAllCourses, getAllEnrollments
 } = require('../controllers/adminController');
+const {
+  getAllWithdrawals, getWithdrawalStats,
+  approveWithdrawal, rejectWithdrawal
+} = require('../controllers/withdrawalAdminController');
 
 router.use(protect, roleAuth('admin'));
 
@@ -16,5 +20,11 @@ router.get('/enrollments', getAllEnrollments);
 router.put('/educators/:id/approve', approveEducator);
 router.put('/users/:id/block', toggleBlockUser);
 router.get('/courses', getAllCourses);
+
+// Withdrawal management
+router.get('/withdrawals', getAllWithdrawals);
+router.get('/withdrawals/stats', getWithdrawalStats);
+router.put('/withdrawals/:id/approve', approveWithdrawal);
+router.put('/withdrawals/:id/reject', rejectWithdrawal);
 
 module.exports = router;

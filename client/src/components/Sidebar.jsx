@@ -40,6 +40,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { to: '/educator/assignments', label: 'Assignments', icon: <HiDocumentText /> },
     { to: '/educator/students', label: 'Students', icon: <HiUsers /> },
     { to: '/educator/analytics', label: 'Analytics', icon: <HiChartBar /> },
+    { to: '/educator/earnings', label: 'Earnings & Wallet', icon: <HiCurrencyRupee /> },
     { to: '/educator/notifications', label: 'Notifications', icon: <HiBell /> },
     { to: '/educator/profile', label: 'Profile', icon: <HiUser /> },
   ];
@@ -54,6 +55,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { to: '/admin/quizzes', label: 'Quiz Monitoring', icon: <HiClipboardCheck /> },
     { to: '/admin/ai-monitoring', label: 'AI Features', icon: <HiLightBulb /> },
     { to: '/admin/payments', label: 'Revenue & Payments', icon: <HiCurrencyRupee /> },
+    { to: '/admin/withdrawals', label: 'Withdrawals', icon: <HiDatabase /> },
     { to: '/admin/reports', label: 'Reports & Analytics', icon: <HiPresentationChartBar /> },
     { to: '/admin/notifications', label: 'Notifications', icon: <HiBell /> },
     { to: '/admin/settings', label: 'Settings', icon: <HiCog /> },

@@ -48,6 +48,7 @@ app.use('/api/certificates', require('./routes/certificateRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
 app.use('/api/ai', require('./routes/aiRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
+app.use('/api/wallet', require('./routes/walletRoutes'));
 
 // Health check route
 app.get('/api/health', (req, res) => {

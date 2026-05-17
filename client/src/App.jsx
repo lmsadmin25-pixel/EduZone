@@ -40,6 +40,7 @@ import CreateQuizPage from './dashboards/educator/CreateQuizPage';
 import EducatorAssignmentsPage from './dashboards/educator/EducatorAssignmentsPage';
 import EducatorStudentsPage from './dashboards/educator/EducatorStudentsPage';
 import AnalyticsPage from './dashboards/educator/AnalyticsPage';
+import EarningsPage from './dashboards/educator/EarningsPage';
 
 // Admin Dashboards
 import AdminDashboard from './dashboards/admin/AdminDashboard';
@@ -54,6 +55,7 @@ import AdminPaymentsPage from './dashboards/admin/AdminPaymentsPage';
 import AdminReportsPage from './dashboards/admin/AdminReportsPage';
 import AdminNotificationsPage from './dashboards/admin/AdminNotificationsPage';
 import SettingsPage from './dashboards/admin/SettingsPage';
+import AdminWithdrawalsPage from './dashboards/admin/AdminWithdrawalsPage';
 
 // Shared
 import NotificationsPage from './dashboards/shared/NotificationsPage';
@@ -106,6 +108,7 @@ function App() {
             <Route path="/educator/assignments" element={<EducatorAssignmentsPage />} />
             <Route path="/educator/students" element={<EducatorStudentsPage />} />
             <Route path="/educator/analytics" element={<AnalyticsPage />} />
+            <Route path="/educator/earnings" element={<EarningsPage />} />
             <Route path="/educator/notifications" element={<NotificationsPage />} />
             <Route path="/educator/profile" element={<ProfilePage />} />
           </Route>
@@ -122,6 +125,7 @@ function App() {
             <Route path="/admin/ai-monitoring" element={<AdminAIMonitoringPage />} />
             <Route path="/admin/payments" element={<AdminPaymentsPage />} />
             <Route path="/admin/reports" element={<AdminReportsPage />} />
+            <Route path="/admin/withdrawals" element={<AdminWithdrawalsPage />} />
             <Route path="/admin/notifications" element={<AdminNotificationsPage />} />
             <Route path="/admin/settings" element={<SettingsPage />} />
           </Route>

@@ -1,16 +1,24 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
-import { FaUsers, FaChalkboardTeacher, FaBookOpen, FaUserGraduate, FaRupeeSign, FaCheckCircle, FaHourglassHalf, FaRobot, FaChartLine } from 'react-icons/fa';
+import { FaUsers, FaChalkboardTeacher, FaBookOpen, FaUserGraduate, FaRupeeSign, FaCheckCircle, FaHourglassHalf, FaRobot, FaChartLine, FaMoneyBillWave } from 'react-icons/fa';
 import api from '../../services/api';
 
 const COLORS = ['#1E3A5F', '#F4B400', '#22C55E', '#3B82F6', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6'];
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({});
+  const [wStats, setWStats] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/admin/dashboard').then(r => setStats(r.data || {})).catch(() => {}).finally(() => setLoading(false));
+    Promise.all([
+      api.get('/admin/dashboard').catch(() => ({ data: {} })),
+      api.get('/admin/withdrawals/stats').catch(() => ({ data: {} }))
+    ]).then(([d, w]) => {
+      setStats(d.data || {});
+      setWStats(w.data || {});
+    }).finally(() => setLoading(false));
   }, []);
 
   const cards = [
@@ -44,6 +52,20 @@ const AdminDashboard = () => {
         <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
         <p className="text-sm text-gray-500 mt-1">Platform overview and analytics</p>
       </div>
+
+      {/* Pending Withdrawals Alert */}
+      {(wStats.pending > 0) && (
+        <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-4 mb-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <FaMoneyBillWave className="text-yellow-600 text-xl" />
+            <div>
+              <p className="font-semibold text-yellow-800">{wStats.pending} Withdrawal Request{wStats.pending > 1 ? 's' : ''} Pending</p>
+              <p className="text-xs text-yellow-600">Review and process educator withdrawal requests</p>
+            </div>
+          </div>
+          <Link to="/admin/withdrawals" className="px-4 py-2 bg-yellow-500 text-white text-sm font-semibold rounded-lg hover:bg-yellow-600 transition-colors">Review Now</Link>
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 mb-6">

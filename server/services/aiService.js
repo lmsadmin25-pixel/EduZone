@@ -1,12 +1,16 @@
 const { GoogleGenerativeAI, SchemaType } = require('@google/generative-ai');
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+if (!process.env.GEMINI_API_KEY) {
+  console.warn('⚠️  GEMINI_API_KEY is not set. AI features will not work.');
+}
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'invalid');
 
 // Generate MCQ quiz questions from text content
 const generateQuiz = async (content, numQuestions = 5) => {
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-1.5-flash',
       generationConfig: {
         responseMimeType: 'application/json',
         responseSchema: {
@@ -44,7 +48,7 @@ const generateQuiz = async (content, numQuestions = 5) => {
 const summarizeNotes = async (content) => {
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-1.5-flash',
       generationConfig: {
         responseMimeType: 'application/json',
         responseSchema: {

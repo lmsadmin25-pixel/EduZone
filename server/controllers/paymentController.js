@@ -5,6 +5,7 @@ const Course = require('../models/Course');
 const Enrollment = require('../models/Enrollment');
 const Student = require('../models/Student');
 const Notification = require('../models/Notification');
+const EarningsWallet = require('../models/EarningsWallet');
 const sendEmail = require('../utils/sendEmail');
 const { paymentSuccessTemplate } = require('../services/emailTemplates');
 
@@ -93,6 +94,33 @@ const verifyPayment = async (req, res, next) => {
     const student = await Student.findByIdAndUpdate(payment.student, {
       $addToSet: { enrolledCourses: payment.course }
     });
+
+    // ─── Credit educator's earnings wallet ─────────────────────────────────────
+    try {
+      await EarningsWallet.findOneAndUpdate(
+        { educator: course.educator },
+        {
+          $inc: {
+            totalEarnings: payment.amount,
+            pendingBalance: payment.amount
+          },
+          $push: {
+            transactions: {
+              type: 'credit',
+              amount: payment.amount,
+              description: `Course sale: "${course.title}"`,
+              courseId: course._id,
+              studentId: payment.student,
+              paymentId: payment.razorpayPaymentId,
+              date: new Date()
+            }
+          }
+        },
+        { upsert: true, new: true }
+      );
+    } catch (walletErr) {
+      console.error('Wallet update failed (non-critical):', walletErr.message);
+    }
 
     // Send payment success email
     try {
