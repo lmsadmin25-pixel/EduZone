@@ -29,7 +29,9 @@ const generateQuiz = async (content, numQuestions = 5) => {
       throw new Error('GEMINI_API_KEY is not configured in environment variables');
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
+   const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+
 
     const prompt = `You are an expert quiz maker. Generate exactly ${numQuestions} multiple choice questions based on the content below.
 
@@ -74,7 +76,9 @@ const summarizeNotes = async (content) => {
       throw new Error('GEMINI_API_KEY is not configured in environment variables');
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
+   const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+
 
     const prompt = `You are an expert study assistant. Analyze the following content and provide a structured summary.
 
