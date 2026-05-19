@@ -30,10 +30,8 @@ router.get('/google',
 router.get('/google/callback',
   passport.authenticate('google', { session: false, failureRedirect: `${process.env.CLIENT_URL}/login?error=oauth_failed` }),
   (req, res) => {
-    // req.user is set by passport strategy (includes role)
     const role = req.user.role || 'student';
     const token = generateToken(req.user._id, role);
-    // Redirect to React frontend callback handler with token & role in query
     res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}&role=${role}`);
   }
 );
