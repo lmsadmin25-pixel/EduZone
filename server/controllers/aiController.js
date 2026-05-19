@@ -12,7 +12,7 @@ const aiGenerateQuiz = async (req, res, next) => {
 
     if (!content) return res.status(400).json({ message: 'Content is required' });
 
-    const questions = await generateQuiz(content, numQuestions || 5);
+    const questions = await generateQuiz(content, numQuestions || 10);
 
     // If courseId provided, save to database
     if (courseId) {
