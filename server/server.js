@@ -64,20 +64,12 @@ if (process.env.NODE_ENV === 'production') {
 
   // Serve static assets (JS, CSS, images, etc.)
   app.use(express.static(clientBuild));
-  // Add this before the catch-all React route
-app.get('/reset-password/:token', (req, res) => {
-  const { token } = req.params;
-  // Render a reset password page or return token to frontend
-  res.sendFile(path.join(__dirname, 'views', 'reset-password.html'));
-});
-
 
   // Catch-all: send index.html for any route React Router should handle
   app.get('*', (req, res) => {
     res.sendFile(path.join(clientBuild, 'index.html'));
   });
 }
-
 
 // Start server
 const PORT = process.env.PORT || 5000;
