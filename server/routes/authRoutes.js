@@ -19,9 +19,6 @@ router.post('/register/educator', registerEducator);
 router.post('/login', login);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:token', resetPassword);
-router.post('/reset-password/:token', resetPassword);
-
-
 
 // ─── Google OAuth ──────────────────────────────────────────────────────────────
 // Step 1: redirect user to Google consent screen
