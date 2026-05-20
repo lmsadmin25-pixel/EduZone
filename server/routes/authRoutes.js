@@ -19,6 +19,9 @@ router.post('/register/educator', registerEducator);
 router.post('/login', login);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:token', resetPassword);
+router.post('/reset-password/:token', resetPassword);
+
+
 
 // ─── Google OAuth ──────────────────────────────────────────────────────────────
 // Step 1: redirect user to Google consent screen
@@ -34,6 +37,7 @@ router.get('/google/callback',
     const token = generateToken(req.user._id, role);
     res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}&role=${role}`);
   }
+  
 );
 
 // Protected routes
