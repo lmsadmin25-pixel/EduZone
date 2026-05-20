@@ -7,8 +7,6 @@ const generateToken = require('../utils/generateToken');
 const sendEmail = require('../utils/sendEmail');
 const { passwordResetTemplate, educatorApprovedTemplate } = require('../services/emailTemplates');
 
-
-
 // @desc    Register student
 // @route   POST /api/auth/register/student
 const registerStudent = async (req, res, next) => {
