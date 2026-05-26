@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaPlay, FaFilePdf, FaCheck, FaLock } from 'react-icons/fa';
+import { FaPlay, FaFilePdf, FaCheck } from 'react-icons/fa';
 import api from '../../services/api';
 
 const CoursePlayerPage = () => {
@@ -10,6 +10,7 @@ const CoursePlayerPage = () => {
   const [course, setCourse] = useState(null);
   const [activeLesson, setActiveLesson] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [marking, setMarking] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -19,8 +20,14 @@ const CoursePlayerPage = () => {
           api.get('/enrollments/my')
         ]);
         setCourse(courseRes.data);
-        const enr = enrollRes.data.find(e => e.course?._id === courseId || e.course === courseId);
-        setEnrollment(enr);
+        const enr = enrollRes.data.find(
+          e => (e.course?._id || e.course)?.toString() === courseId
+        );
+        if (enr) {
+          // Normalise completedLessons to strings right at load time
+          enr.completedLessons = (enr.completedLessons || []).map(id => id.toString());
+        }
+        setEnrollment(enr || null);
       } catch { toast.error('Failed to load course'); }
       finally { setLoading(false); }
     };
@@ -28,32 +35,57 @@ const CoursePlayerPage = () => {
   }, [courseId]);
 
   const markComplete = async (lessonId) => {
-    if (!enrollment) return;
+    if (!enrollment) {
+      toast.error('Enrollment not found. Please enroll in this course first.');
+      return;
+    }
+    if (!lessonId) {
+      toast.error('Could not identify this lesson. Please refresh the page.');
+      return;
+    }
     try {
-      const res = await api.put(`/enrollments/${enrollment._id}/progress`, { lessonId });
-      const updatedEnrollment = res.data.enrollment;
-      setEnrollment(updatedEnrollment);
+      setMarking(true);
+      const res = await api.put(`/enrollments/${enrollment._id}/progress`, {
+        lessonId: lessonId.toString()
+      });
+      const updated = res.data.enrollment;
+
+      // Update state with normalised string IDs — keep populated course reference intact
+      setEnrollment(prev => ({
+        ...prev,
+        progress: updated.progress,
+        completedAt: updated.completedAt,
+        completedLessons: (updated.completedLessons || []).map(id => id.toString())
+      }));
+
       toast.success('Lesson marked as complete!');
 
       // Auto-generate certificate when course is 100% complete
-      if (updatedEnrollment.progress === 100) {
+      if (updated.progress === 100) {
         try {
           await api.post('/certificates/generate', { courseId });
           toast.success('🎉 Congratulations! Certificate generated — check My Certificates!', { autoClose: 6000 });
         } catch {
-          // Already exists or other error — ignore silently
+          // Certificate may already exist — ignore silently
         }
       }
-    } catch { toast.error('Failed to update progress'); }
+    } catch (err) {
+      // Surface the actual server error message for clarity
+      const msg = err.response?.data?.message || err.message || 'Failed to update progress';
+      toast.error(msg);
+    } finally {
+      setMarking(false);
+    }
   };
 
   if (loading) return <div className="flex justify-center py-10"><div className="w-10 h-10 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin" /></div>;
   if (!course) return <div className="text-center py-10 text-gray-400">Course not found</div>;
 
   const currentLesson = course.lessons?.[activeLesson];
-  // Compare as strings — DB stores ObjectId-derived strings, lesson._id comes as ObjectId
+
+  // All IDs normalised to strings at load/update time — simple includes() is now safe
   const isLessonCompleted = (lessonId) =>
-    enrollment?.completedLessons?.map(id => id.toString()).includes(lessonId?.toString());
+    enrollment?.completedLessons?.includes(lessonId?.toString());
 
   return (
     <div>
@@ -67,9 +99,16 @@ const CoursePlayerPage = () => {
 
       {/* Progress Bar */}
       <div className="w-full bg-surface-200 rounded-full h-2 mb-6">
-        <div className={`h-2 rounded-full transition-all ${enrollment?.progress === 100 ? 'bg-green-500' : 'bg-primary-500'}`}
+        <div className={`h-2 rounded-full transition-all duration-500 ${enrollment?.progress === 100 ? 'bg-green-500' : 'bg-primary-500'}`}
           style={{ width: `${enrollment?.progress || 0}%` }} />
       </div>
+
+      {/* Not enrolled warning */}
+      {!enrollment && (
+        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-700">
+          ⚠️ You are not enrolled in this course. Please enroll first to track your progress.
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Video / Content Area */}
@@ -102,9 +141,11 @@ const CoursePlayerPage = () => {
                 )}
 
                 {!isLessonCompleted(currentLesson?._id) ? (
-                  <button onClick={() => markComplete(currentLesson?._id)}
-                    className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-600 rounded-lg text-sm font-medium hover:bg-green-100">
-                    <FaCheck /> Mark as Complete
+                  <button
+                    onClick={() => markComplete(currentLesson?._id)}
+                    disabled={marking || !enrollment}
+                    className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-600 rounded-lg text-sm font-medium hover:bg-green-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                    <FaCheck /> {marking ? 'Saving...' : 'Mark as Complete'}
                   </button>
                 ) : (
                   <span className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
