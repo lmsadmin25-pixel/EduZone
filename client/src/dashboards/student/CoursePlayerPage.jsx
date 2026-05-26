@@ -51,7 +51,9 @@ const CoursePlayerPage = () => {
   if (!course) return <div className="text-center py-10 text-gray-400">Course not found</div>;
 
   const currentLesson = course.lessons?.[activeLesson];
-  const isLessonCompleted = (lessonId) => enrollment?.completedLessons?.includes(lessonId);
+  // Compare as strings — DB stores ObjectId-derived strings, lesson._id comes as ObjectId
+  const isLessonCompleted = (lessonId) =>
+    enrollment?.completedLessons?.map(id => id.toString()).includes(lessonId?.toString());
 
   return (
     <div>

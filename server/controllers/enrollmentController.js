@@ -72,26 +72,33 @@ const getMyEnrollments = async (req, res, next) => {
 const updateProgress = async (req, res, next) => {
   try {
     const { lessonId } = req.body;
-    const enrollment = await Enrollment.findById(req.params.id);
+    if (!lessonId) return res.status(400).json({ message: 'lessonId is required' });
 
+    const enrollment = await Enrollment.findById(req.params.id);
     if (!enrollment) return res.status(404).json({ message: 'Enrollment not found' });
     if (enrollment.student.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized' });
     }
 
-    // Add lesson to completed if not already there
-    if (!enrollment.completedLessons.includes(lessonId)) {
-      enrollment.completedLessons.push(lessonId);
+    // Normalise all stored IDs to strings for reliable comparison
+    const completedSet = new Set(enrollment.completedLessons.map(id => id.toString()));
+    const lessonIdStr = lessonId.toString();
+
+    if (!completedSet.has(lessonIdStr)) {
+      completedSet.add(lessonIdStr);
+      enrollment.completedLessons = Array.from(completedSet);
     }
 
-    // Calculate progress
+    // Re-fetch course to get authoritative lesson count
     const course = await Course.findById(enrollment.course);
+    if (!course) return res.status(404).json({ message: 'Course not found' });
+
     const totalLessons = course.lessons.length;
     enrollment.progress = totalLessons > 0
-      ? Math.round((enrollment.completedLessons.length / totalLessons) * 100)
+      ? Math.min(100, Math.round((completedSet.size / totalLessons) * 100))
       : 0;
 
-    // Mark as completed if 100%
+    // Mark course as completed when all lessons done
     if (enrollment.progress === 100 && !enrollment.completedAt) {
       enrollment.completedAt = new Date();
       await Student.findByIdAndUpdate(req.user._id, {

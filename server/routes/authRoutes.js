@@ -12,13 +12,20 @@ const {
 } = require('../controllers/authController');
 const protect = require('../middleware/auth');
 const generateToken = require('../utils/generateToken');
+const {
+  validateRegisterStudent,
+  validateRegisterEducator,
+  validateLogin,
+  validateForgotPassword,
+  validateResetPassword
+} = require('../middleware/validate');
 
-// Public routes
-router.post('/register/student', registerStudent);
-router.post('/register/educator', registerEducator);
-router.post('/login', login);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password/:token', resetPassword);
+// Public routes — with validation
+router.post('/register/student', validateRegisterStudent, registerStudent);
+router.post('/register/educator', validateRegisterEducator, registerEducator);
+router.post('/login', validateLogin, login);
+router.post('/forgot-password', validateForgotPassword, forgotPassword);
+router.post('/reset-password/:token', validateResetPassword, resetPassword);
 
 // ─── Google OAuth ──────────────────────────────────────────────────────────────
 // Step 1: redirect user to Google consent screen

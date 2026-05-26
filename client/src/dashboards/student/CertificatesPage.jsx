@@ -23,10 +23,10 @@ const CertificatesPage = () => {
         ]);
         const myCerts = certRes.data || [];
         const allEnrollments = enrollRes.data || [];
-        // Find 100% completed enrollments that don't have a certificate yet
-        const certCourseIds = new Set(myCerts.map(c => c.course?._id || c.course));
+        // Normalise to strings so Set.has() works regardless of ObjectId vs string
+        const certCourseIds = new Set(myCerts.map(c => (c.course?._id || c.course)?.toString()));
         const needsCert = allEnrollments.filter(e =>
-          e.progress === 100 && !certCourseIds.has(e.course?._id || e.course)
+          e.progress === 100 && !certCourseIds.has((e.course?._id || e.course)?.toString())
         );
         setCerts(myCerts);
         setCompletedEnrollments(needsCert);
@@ -44,7 +44,9 @@ const CertificatesPage = () => {
       // Fetch full cert with populated fields
       const fullRes = await api.get(`/certificates/${newCert._id}`);
       setCerts(prev => [fullRes.data, ...prev]);
-      setCompletedEnrollments(prev => prev.filter(e => (e.course?._id || e.course) !== courseId));
+      setCompletedEnrollments(prev =>
+        prev.filter(e => (e.course?._id || e.course)?.toString() !== courseId.toString())
+      );
       toast.success('🎉 Certificate generated!');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to generate certificate');
