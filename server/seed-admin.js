@@ -26,7 +26,7 @@ const seedAdmin = async () => {
 
     console.log('✅ Admin account created successfully!');
     console.log('📧 Email: admin@eduzone.com');
-    console.log('🔑 Password: admin123456');
+    console.log('🔑 Password: ALIVEis123');
     console.log('');
     console.log('⚠️ Change this password after first login!');
     
