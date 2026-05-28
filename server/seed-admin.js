@@ -21,7 +21,7 @@ const seedAdmin = async () => {
     const admin = await Admin.create({
       name: 'EduZone Admin',
       email: 'admin@eduzone.com',
-      password: 'admin123456'
+      password: 'ALIVEis123'
     });
 
     console.log('✅ Admin account created successfully!');
